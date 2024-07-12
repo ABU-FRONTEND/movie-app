@@ -1,24 +1,37 @@
 import IUsers from "../../interface/IUser";
+import ILogin from "../../interface/ILogin";
 import { Link } from "react-router-dom";
 import icon from "../../assets/icons/movie-icon.svg";
 import { useForm } from "react-hook-form";
 import axios from "axios";
-import { useQuery } from "@tanstack/react-query";
+
 export default function Register() {
     const { register, handleSubmit, formState: { errors }, getValues } = useForm({
         mode: 'onChange'
     });
+
     const postUser = async (data: IUsers) => {
-        const response = await axios.post('http://localhost:3000/users', data);
-        return response.data;
+        try {
+            const response = await axios.post('http://localhost:3000/register', data);
+            return response.data;
+        } catch (error) {
+            console.error("Error posting user:", error);
+            throw error; // You might want to handle errors more gracefully based on your app's requirements
+        }
     }
 
-    const onSubmit = (data: IUsers): void => {
-        if(data){
-            postUser(data)
+    const onSubmit = async (data: IUsers): Promise<void> => {
+        const newData: ILogin = { email: data.email, password: data.password };
+        
+        try {
+            const responseData = await postUser(newData);
+            console.log("User registration successful:", responseData);
+            // Optionally, you can redirect to a success page or perform other actions upon successful registration
+        } catch (error) {
+            console.error("Error submitting form:", error);
+            // Handle error state or display an error message to the user
         }
     };
-
     return (
         <div className="w-full h-screen">
             <div className="h-screen flex flex-col gap-[40px] items-center pt-[100px]">
