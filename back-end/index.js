@@ -20,7 +20,7 @@ function connectDB() {
 }
 
 app.post('/register', async (req, res) => {
-    const { username, email, password } = req.body;
+    const { email, password } = req.body;
 
     try {
         const existingUser = await User.findOne({ email });
@@ -29,7 +29,7 @@ app.post('/register', async (req, res) => {
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
-        const newUser = new User({ username, email, password: hashedPassword });
+        const newUser = new User({ email, password: hashedPassword });
         await newUser.save();
 
         res.status(201).json({ message: 'User registered successfully' });
@@ -40,10 +40,10 @@ app.post('/register', async (req, res) => {
 });
 
 app.post('/login', async (req, res) => {
-    const { username, password } = req.body;
+    const { email, password } = req.body;
 
     try {
-        const user = await User.findOne({ username });
+        const user = await User.findOne({ email });
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
@@ -53,7 +53,7 @@ app.post('/login', async (req, res) => {
             return res.status(401).json({ message: 'Invalid credentials' });
         }
 
-        const token = jwt.sign({ username: user.username }, 'your_secret_key', { expiresIn: '1h' });
+        const token = jwt.sign({ email: user.email }, 'your_secret_key', { expiresIn: '1h' });
 
         res.status(200).json({ token });
     } catch (error) {
