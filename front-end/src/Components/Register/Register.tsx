@@ -26,7 +26,6 @@ export default function Register() {
         try {
             const responseData = await postUser(newData);
             console.log("User registration successful:", responseData);
-            // Optionally, you can redirect to a success page or perform other actions upon successful registration
         } catch (error) {
             console.error("Error submitting form:", error);
             // Handle error state or display an error message to the user
