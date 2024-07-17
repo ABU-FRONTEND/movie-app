@@ -84,7 +84,19 @@ app.post('/bookmarks', verifyToken, async (req, res) => {
         res.status(500).json({ message: 'Internal server error' });
     }
 });
-
+app.get('/bookmarks', verifyToken, async (req, res) => {
+    const userId = req.user._id;
+    try {
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        res.status(200).json({ bookmarks: user.bookmarks });
+    } catch (error) {
+        console.error('Bookmark error:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+})
 app.get('/logout', (req, res) => {
     res.status(200).json({ message: 'Logout successful' });
 });
@@ -98,9 +110,6 @@ app.get('/all', (req, res) => {
     res.status(200).json(data);
 });
 
-app.get('/popular', (req, res) => {
-    res.status(200).json(data.filter(movie => movie.isTrending));
-})
 
 app.get('/category/:category', (req, res) => {
     const category = req.params.category.toLowerCase();
@@ -125,7 +134,8 @@ function verifyToken(req, res, next) {
     });
 }
 
+
 app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
+    console.log(`Server is running on +`);
     connectDB();
 });

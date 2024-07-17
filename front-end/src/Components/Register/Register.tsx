@@ -4,8 +4,10 @@ import { Link } from "react-router-dom";
 import icon from "../../assets/icons/movie-icon.svg";
 import { useForm } from "react-hook-form";
 import axios from "axios";
+import { useNavigate } from "react-router-dom"
 
 export default function Register() {
+    const navigate = useNavigate();
     const { register, handleSubmit, formState: { errors }, getValues } = useForm({
         mode: 'onChange'
     });
@@ -22,10 +24,11 @@ export default function Register() {
 
     const onSubmit = async (data: IUsers): Promise<void> => {
         const newData: ILogin = { email: data.email, password: data.password };
-        
+        navigate('/home')
         try {
             const responseData = await postUser(newData);
             console.log("User registration successful:", responseData);
+            
         } catch (error) {
             console.error("Error submitting form:", error);
             // Handle error state or display an error message to the user
