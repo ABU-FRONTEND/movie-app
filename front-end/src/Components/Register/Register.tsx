@@ -24,14 +24,13 @@ export default function Register() {
 
     const onSubmit = async (data: IUsers): Promise<void> => {
         const newData: ILogin = { email: data.email, password: data.password };
-        navigate('/home')
         try {
             const responseData = await postUser(newData);
             console.log("User registration successful:", responseData);
+            navigate('/home')
             
         } catch (error) {
             console.error("Error submitting form:", error);
-            // Handle error state or display an error message to the user
         }
     };
     return (

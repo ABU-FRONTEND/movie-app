@@ -5,7 +5,7 @@ export default function Layout() {
   return (
     <div className="block lg:flex w-full gap-5">
         <Sidebar/>
-        <div className="w-full">
+        <div className="w-full px-4 lg:px-0">
         <Search/>
         <Outlet/>
         </div>

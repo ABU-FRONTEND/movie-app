@@ -64,69 +64,28 @@ app.post('/login', async (req, res) => {
 
 app.post('/add-bookmarks', verifyToken, async (req, res) => {
     const { movieId } = req.body;
-    console.log('Request User:', req.user);
 
     try {
-        if (!data || !Array.isArray(data)) {
-            console.error('Data is not defined or not an array');
-            return res.status(500).json({ message: 'Internal server error' });
-        }
+        const userId = req.user._id;
 
-        // Check if the movie exists in the Movie model
-        const movie = data.filter(movie => movie.id === movieId);
-        console.log('Filtered Movie:', movie);
+        const user = await User.findById(userId);
 
-        if (movie.length === 0) {
-            console.log('Movie not found');
-            return res.status(404).json({ message: 'Movie not found' });
-        }
-
-        // Get the movieId from the found movie
-        const foundMovieId = movie[0].id;
-        console.log('Found Movie ID:', foundMovieId);
-
-        // Log the user's email
-        console.log('User Email:', req.user.email);
-
-        // Find the user by email
-        const user = await User.findOne({ email: req.user.email });
         if (!user) {
-            console.log('User not found');
             return res.status(404).json({ message: 'User not found' });
         }
 
-        console.log('User found:', user);
+        user.bookmarks.push(movieId);
 
-        // Convert the movieId to ObjectId if required by the schema
-        let movieObjectId;
-        try {
-            movieObjectId = new mongoose.Types.ObjectId(foundMovieId);
-        } catch (err) {
-            console.error('Invalid movie ID:', foundMovieId);
-            return res.status(400).json({ message: 'Invalid movie ID' });
-        }
+        await user.save();
 
-        // Check if the movie is already bookmarked
-        if (!user.bookmarks.includes(movieObjectId)) {
-            console.log('Adding movie to bookmarks');
-            user.bookmarks.push(movieObjectId);
-
-            try {
-                await user.save();
-                console.log('Movie added to bookmarks');
-                return res.status(200).json({ message: 'Movie added to bookmarks' });
-            } catch (saveError) {
-                console.error('Error saving user:', saveError);
-                return res.status(500).json({ message: 'Internal server error' });
-            }
-        } else {
-            console.log('Movie already in bookmarks');
-            return res.status(400).json({ message: 'Movie already in bookmarks' });
-        }
+        res.status(200).json({ message: 'Bookmark added successfully' });
     } catch (error) {
         console.error('Bookmark error:', error);
         res.status(500).json({ message: 'Internal server error' });
     }
+    
+
+    
 });
 
 app.get('/bookmarks', verifyToken, async (req, res) => {

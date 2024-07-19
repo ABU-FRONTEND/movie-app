@@ -5,7 +5,10 @@ import axios from "axios"
 import IUsers from "../../interface/IUser"
 import ILogin from "../../interface/ILogin"
 import { useNavigate } from "react-router-dom"
+import { useDispatch } from "react-redux"
+import { setIResponseData } from "../../app/reducers/IResponseData"
 export default function Login() {
+    const dispatch = useDispatch()
     const navigate = useNavigate();
     const {register,handleSubmit,reset, formState: {errors}} = useForm({
         mode: 'onChange'
@@ -17,7 +20,7 @@ export default function Login() {
         } catch (error) {
             reset()
             console.error("Error posting user:", error);
-            throw error; // You might want to handle errors more gracefully based on your app's requirements
+            throw error;
         }
     }
     
@@ -28,6 +31,9 @@ export default function Login() {
             const responseData = await postUser(newData);
             console.log("User registration successful:", responseData);
             saveToken(responseData.token);
+            dispatch(setIResponseData(responseData.user));
+            console.log(responseData.user);
+                        
         } catch (error) {
             console.error("Error submitting form:", error);
             alert('Wrong email or password');

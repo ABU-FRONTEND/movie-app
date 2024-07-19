@@ -16,7 +16,7 @@ export default function Sidebar() {
     <div className=" p-[10px]">
         <div className="w-full lg:w-max lg:h-[960px] flex lg:flex-col justify-between relative items-center bg-[#161D2F] p-4 rounded-[15px]">
             <div className="w-[100%] lg:w-max flex lg:flex-col items-center gap-0 lg:gap-[40px] ">
-                <img src={icon} alt="icon"/>
+                <Link to={'/home'} onClick={() => handleActive(1)}><img src={icon} alt="icon" /></Link>
                 <div className="flex lg:flex-col gap-[20px] m-auto">
                 <Link to={'/home'} onClick={() => handleActive(1)}>
                 <svg className={`${active === 1 ? 'fill-[#fff]' : 'fill-[#5a698f]' } `} width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -44,7 +44,7 @@ export default function Sidebar() {
 
                 </div>
             </div>
-            <div onClick={() => setIsOpen(!isOpen)} className="w-10 h-10 rounded-full bg-[#fff] xl:self-end">
+            <div onClick={() => setIsOpen(!isOpen)} className="w-10 h-10 rounded-full cursor-pointer bg-[#fff] xl:self-end">
 
             </div>
             {
