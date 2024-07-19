@@ -63,29 +63,50 @@ app.post('/login', async (req, res) => {
 });
 
 app.post('/add-bookmarks', verifyToken, async (req, res) => {
-    const { movieId } = req.body;
-
+    const { movieId, userId } = req.body;
     try {
-        const userId = req.user._id;
-
         const user = await User.findById(userId);
-
+        console.log(user);
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
 
-        user.bookmarks.push(movieId);
+        if (!user.bookmarks) {
+            user.bookmarks = [];
+        }
+
+        if (!user.bookmarks.includes(movieId)) {
+            user.bookmarks.push(movieId);
+        } else {
+            return res.status(400).json({ message: 'Bookmark already exists' });
+        }
+
 
         await user.save();
-
         res.status(200).json({ message: 'Bookmark added successfully' });
     } catch (error) {
         console.error('Bookmark error:', error);
         res.status(500).json({ message: 'Internal server error' });
     }
-    
+});
 
-    
+
+app.post('/remove-bookmarks', verifyToken, async (req, res) => {
+    const { movieId, userId } = req.body;
+
+    try {
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        user.bookmarks = user.bookmarks.filter(id => id.toString() !== movieId);
+        await user.save();
+        res.status(200).json({ message: 'Bookmark removed successfully' });
+    } catch (error) {
+        console.error('Bookmark error:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
 });
 
 app.get('/bookmarks', verifyToken, async (req, res) => {
