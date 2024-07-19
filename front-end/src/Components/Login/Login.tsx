@@ -5,7 +5,10 @@ import axios from "axios"
 import IUsers from "../../interface/IUser"
 import ILogin from "../../interface/ILogin"
 import { useNavigate } from "react-router-dom"
+import { useDispatch } from "react-redux"
+import { setIResponseData } from "../../app/reducers/IResponseData"
 export default function Login() {
+    const dispatch = useDispatch()
     const navigate = useNavigate();
     const {register,handleSubmit,reset, formState: {errors}} = useForm({
         mode: 'onChange'
@@ -17,7 +20,7 @@ export default function Login() {
         } catch (error) {
             reset()
             console.error("Error posting user:", error);
-            throw error; // You might want to handle errors more gracefully based on your app's requirements
+            throw error;
         }
     }
     
@@ -28,6 +31,9 @@ export default function Login() {
             const responseData = await postUser(newData);
             console.log("User registration successful:", responseData);
             saveToken(responseData.token);
+            dispatch(setIResponseData(responseData.user));
+            console.log(responseData.user);
+                        
         } catch (error) {
             console.error("Error submitting form:", error);
             alert('Wrong email or password');
@@ -44,19 +50,19 @@ export default function Login() {
            <div className="w-full max-w-[400px] bg-[#161D2F] p-[30px] rounded-[20px]">
            <form onSubmit={handleSubmit((data) => onSubmit(data))}>
                 <h1 className="text-3xl pb-7">Login</h1>
-                <input type="text" {...register('email', {required: true, minLength: {
-                    value: 3,
-                    message: 'Can`t you required'
+                <input type="text" {...register('email', {required: 'email requird', pattern: {
+                    value: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/,
+                    message: 'Invalid email address'
                 }})} className=" pb-[10px] w-full font-outfit font-light px-[10px] border-none outline-none bg-transparent  border-b-[2px] border-[#5a698f] text-[15px]" placeholder="Email address" />
                 <hr className="border-[#5a698f]" />
-                <span className="text-[#FC4747] text-[10px]">{errors.email?.message}</span>
+                <span className="text-[#FC4747] text-[10px]">{errors.email?.message?.toString() ?? ''}</span>
                 <input type="text"
-                {...register('password', {required: true, minLength:{
+                {...register('password', {required: "required", minLength:{
                     value: 6,   
-                    message: "can't you required"
+                    message: "min length 6"
                 }})} className="pb-[10px] w-full font-outfit font-light mt-[20px] px-[10px] border-none outline-none bg-transparent border-b border-[#5a698f] text-[15px]" placeholder="Password" />
                 <hr  className="border-[#5a698f]"/>
-                <span className="text-[#FC4747] text-[10px]">{errors.password?.message}</span>
+                <span className="text-[#FC4747] text-[10px]">{errors.password?.message as string}</span>
                 <button className="block w-full bg-[#FC4747] p-[15px] rounded-[5px] mt-[40px]">Login to your account</button>
             </form>
             <p className="text-[15px] text-center font-outfit font-light pt-5">Don’t have an account? <Link className="text-[#FC4747]" to={'/register'}> Sign up</Link></p>
