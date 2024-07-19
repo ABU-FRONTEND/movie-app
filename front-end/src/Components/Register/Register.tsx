@@ -18,7 +18,7 @@ export default function Register() {
             return response.data;
         } catch (error) {
             console.error("Error posting user:", error);
-            throw error; // You might want to handle errors more gracefully based on your app's requirements
+            throw error;
         }
     }
 
