@@ -34,7 +34,7 @@ const PrivateRoute: React.FC<Props> = ({children}) => {
        }
 
        verifyToken();
-    }, []);
+    }, [token]);
 
     if (isLogin === null) {
         return (
