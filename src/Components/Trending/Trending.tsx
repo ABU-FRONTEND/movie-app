@@ -1,40 +1,74 @@
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { useEffect, useState } from 'react';
 import 'swiper/swiper-bundle.css';
+import axios from 'axios';
+import { useQuery } from '@tanstack/react-query';
+import TrendingCard from '../TrengdingCard/TrendingCard';
+import ITrendingCard from '../../interface/ITrendingCard';
+import TrendingSkeleton from '../TrendingSkeleton/TrendingSkeleton';
 
-const Trending = () => {
+const Trending: React.FC = () => {
+    const fetchTrending = async () => {
+        try {
+            const response = await axios.get('http://localhost:3000/trending');
+            return response.data;
+        } catch (error) {
+            console.error(error);
+            return []; 
+        }
+    };
+
+    const { data } = useQuery({
+        queryKey: ['trending'],
+        queryFn: fetchTrending
+    });
+
+    const [columnWidth, setColumnWidth] = useState(calculateColumnWidth()); 
+
+    useEffect(() => {
+        function handleResize() {
+            setColumnWidth(calculateColumnWidth()); 
+        }
+
+        window.addEventListener('resize', handleResize); 
+
+        return () => {
+            window.removeEventListener('resize', handleResize); 
+        };
+    }, []); 
+ 
+    function calculateColumnWidth() {
+        const screenWidth = window.innerWidth;
+        if(screenWidth < 400){
+            return 1.25;
+        }
+        if (screenWidth < 768) {
+            return 1.5;
+        } else if (screenWidth < 1024) {
+            return 2.5;
+        } else {
+            return 3.5;
+        }
+    }
+
     return (
-        <Swiper
-            spaceBetween={30}
-            slidesPerView={1}
-            breakpoints={{
-                640: {
-                    slidesPerView: 2,
-                },
-                768: {
-                    slidesPerView: 3,
-                },
-                1024: {
-                    slidesPerView: 4,
-                },
-            }}
-            navigation
-            pagination={{ clickable: true }}
-            scrollbar={{ draggable: true }}
-            loop={true}
-            autoplay={{ delay: 3000 }}
-            className="mySwiper"
-        >
-            <SwiperSlide>
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ6bo8HyLB1ivrtC-YmkxGKCSU4cXmpMRzzFQ&s" alt="Slide 1" />
-            </SwiperSlide>
-            <SwiperSlide>
-                <img src="slide2.jpg" alt="Slide 2" />
-            </SwiperSlide>
-            <SwiperSlide>
-                <img src="slide3.jpg" alt="Slide 3" />
-            </SwiperSlide>
-            {/* Add more SwiperSlide components for additional slides */}
-        </Swiper>
+        <div className="trending-main">
+            <h2 className="text-white font-outfit text-[32px] font-light my-6">Trending</h2>
+            <Swiper spaceBetween={20} slidesPerView={columnWidth}>
+                {data?.map((item: ITrendingCard) => (
+                    <SwiperSlide key={item.id}>
+                        <TrendingCard
+                            id={item.id}
+                            title={item.title}
+                            img={item.thumbnail}
+                            year={item.year}
+                            type={item.category}
+                            rating={item.rating}
+                        />
+                    </SwiperSlide>
+                ))}
+            </Swiper>
+        </div>
     );
 };
 

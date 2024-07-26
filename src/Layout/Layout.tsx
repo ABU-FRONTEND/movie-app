@@ -1,14 +1,13 @@
 import Search from "../Components/Search/Search";
 import Sidebar from "../Components/Sidebar/Sidebar";
-import Trending from "../Components/Trending/Trending";
-
+import { Outlet } from "react-router-dom";
 export default function Layout() {
   return (
-    <div className="flex w-full gap-5">
+    <div className="block lg:flex w-full gap-5">
         <Sidebar/>
-        <div>
+        <div className="w-full max-w-[1400px] mx-auto px-4 lg:px-0">
         <Search/>
-        <Trending/>
+        <Outlet/>
         </div>
     </div>
   )

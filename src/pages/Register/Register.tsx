@@ -1,35 +1,30 @@
-import IUsers from "../../interface/IUser";
-import ILogin from "../../interface/ILogin";
 import { Link } from "react-router-dom";
 import icon from "../../assets/icons/movie-icon.svg";
-import { useForm } from "react-hook-form";
-import axios from "axios";
+import {  FieldValues, useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom"
+import { ReactNode } from "react";
+import useRegister from "../../hooks/useRegister";
 
 export default function Register() {
+    const navigate = useNavigate();
     const { register, handleSubmit, formState: { errors }, getValues } = useForm({
         mode: 'onChange'
     });
+    const mutation = useRegister();
+    
 
-    const postUser = async (data: IUsers) => {
-        try {
-            const response = await axios.post('http://localhost:3000/register', data);
-            return response.data;
-        } catch (error) {
-            console.error("Error posting user:", error);
-            throw error; // You might want to handle errors more gracefully based on your app's requirements
-        }
-    }
+    const onSubmit = async (data: FieldValues): Promise<void> => {
+        const newData = { email: data.email, password: data.password };
+        mutation.mutate(newData, {
+            onSuccess: () => {
+                navigate('/home')
+            },
+            onError: () => {
+                alert('Wrong email or password');
+            }
+        });
 
-    const onSubmit = async (data: IUsers): Promise<void> => {
-        const newData: ILogin = { email: data.email, password: data.password };
         
-        try {
-            const responseData = await postUser(newData);
-            console.log("User registration successful:", responseData);
-        } catch (error) {
-            console.error("Error submitting form:", error);
-            // Handle error state or display an error message to the user
-        }
     };
     return (
         <div className="w-full h-screen">
@@ -51,7 +46,7 @@ export default function Register() {
                             placeholder="Email address"
                         />
                         <hr className="border-[#5a698f]" />
-                        {errors.email && <span className="text-[#FC4747] right-[10px] text-[10px]">{errors.email.message}</span>}
+                        <span className="text-[#FC4747] right-[10px] text-[10px]">{errors?.email?.message as ReactNode}</span>
                         <input
                             type="password"
                             {...register('password', {
@@ -65,7 +60,7 @@ export default function Register() {
                             placeholder="Password"
                         />
                         <hr className="border-[#5a698f]" />
-                        {errors.password && <span className="text-[#FC4747] text-[10px]">{errors.password.message}</span>}
+                        <span className="text-[#FC4747] text-[10px]">{errors?.password?.message as ReactNode}</span>
                         <input
                             type="password"
                             {...register('confirm', {
@@ -81,7 +76,7 @@ export default function Register() {
                             placeholder="Repeat Password"
                         />
                         <hr className="border-[#5a698f]" />
-                        {errors.confirm && <span className="text-[#FC4747] text-[10px]">{errors.confirm.message}</span>}
+                        <span className="text-[#FC4747] text-[10px]">{errors?.confirm?.message as ReactNode}</span>
                         <button className="block w-full bg-[#FC4747] p-[15px] rounded-[5px] mt-[40px]">Create an account</button>
                     </form>
                     <p className="text-[15px] text-center font-outfit font-light pt-5">
