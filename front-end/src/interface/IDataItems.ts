@@ -10,5 +10,6 @@ export default interface IDataItems {
     },
     id: string,
     img: string,
-    category: string
+    category: string,
+    refetch: () => void
 }

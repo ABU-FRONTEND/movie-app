@@ -3,7 +3,7 @@ export default function Movies() {
 
   return (
     <div>
-        <CardList link={'http://localhost:3000/category/movie'} Qkey={'movies'}/>
+        <CardList link={'http://localhost:3000/category/movie'} Qkey={'movies'} type={'Movies'}/>
     </div>
   )
 }
