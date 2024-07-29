@@ -31,7 +31,7 @@ export default function Register() {
             <div className="h-screen flex flex-col gap-[40px] items-center pt-[100px]">
                 <img src={icon} alt="web app icon" />
                 <div className="w-full max-w-[400px] bg-[#161D2F] p-[30px] rounded-[20px]">
-                    <form onSubmit={handleSubmit((data) => onSubmit(data))}>
+                    <form onSubmit={handleSubmit(onSubmit)}>
                         <h1 className="text-3xl pb-7">Sign In</h1>
                         <input
                             type="text"
