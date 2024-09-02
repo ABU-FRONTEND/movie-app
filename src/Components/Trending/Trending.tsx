@@ -5,12 +5,11 @@ import axios from 'axios';
 import { useQuery } from '@tanstack/react-query';
 import TrendingCard from '../TrengdingCard/TrendingCard';
 import ITrendingCard from '../../interface/ITrendingCard';
-import TrendingSkeleton from '../TrendingSkeleton/TrendingSkeleton';
 
 const Trending: React.FC = () => {
     const fetchTrending = async () => {
         try {
-            const response = await axios.get('http://localhost:3000/trending');
+            const response = await axios.get('https://movie-app-backend-2.onrender.com/trending');
             return response.data;
         } catch (error) {
             console.error(error);

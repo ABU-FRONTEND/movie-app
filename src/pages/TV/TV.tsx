@@ -3,7 +3,7 @@ export default function TV() {
    
   return (
     <div>
-      <CardList link={'http://localhost:3000/category/tv'} Qkey={'tv'} type={'TV Series'}/>
+      <CardList link={'https://movie-app-backend-2.onrender.com/category/tv'} Qkey={'tv'} type={'TV Series'}/>
     </div>
   )
 }

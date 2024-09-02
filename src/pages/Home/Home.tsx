@@ -8,7 +8,7 @@ export default function Home() {
   return (
     <div>
         { value === '' ? <Trending/> : null}
-        <CardList link={'http://localhost:3000/all'} Qkey={'all'} type={'Recommended for you'}/>
+        <CardList link={'https://movie-app-backend-2.onrender.com/all'} Qkey={'all'} type={'Recommended for you'}/>
     </div>
   )
 }

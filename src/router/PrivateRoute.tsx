@@ -15,7 +15,7 @@ const PrivateRoute: React.FC<Props> = ({children}) => {
             return;
         } 
         try {
-            const response = await axios.get('http://localhost:3000/auth/check', {
+            const response = await axios.get('https://movie-app-backend-2.onrender.com/auth/check', {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
