@@ -17,6 +17,7 @@ const Router = () => {
           element={<PrivateRoute>
             <Layout/>
         </PrivateRoute>}>
+        <Route path={'/'} element={<Navigate to={'/home'}/>}/>
         <Route index path={ROUTE_PATH.HOME} element={<Home/>} />
         <Route path={ROUTE_PATH.MOVIES} element={<Movies/>}/>
         <Route path={ROUTE_PATH.TV} element={<TV/>}/>
